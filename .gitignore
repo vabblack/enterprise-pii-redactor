@@ -1,0 +1,25 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Customizations & Agents
+.agents/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Uploads & Temp Files
+uploads/*
+!uploads/.gitkeep
+scratch/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.ds_store
+Thumbs.db
