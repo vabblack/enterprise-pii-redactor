@@ -8,6 +8,8 @@ env/
 .agents/
 evaluation_strategy_and_metrics.md
 EVALUATION_STRATEGY_AND_METRICS.md
+Evaluation_Strategy_and_Metrics.docx
+EVALUATION_STRATEGY_AND_METRICS.docx
 
 # Python Cache & Bytecode
 __pycache__/
