@@ -438,18 +438,38 @@ HTML_TEMPLATE = """
             background: rgba(0, 240, 255, 0.04);
         }
 
+        .table-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .table-scroll::-webkit-scrollbar-track {
+            background: rgba(4, 7, 17, 0.4);
+            border-radius: 4px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: var(--cyan-glow);
+            border-radius: 4px;
+        }
+        .table-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: var(--cyan-glow) rgba(4, 7, 17, 0.4);
+        }
+
         .tag-cat {
             display: inline-block;
-            padding: 0.3rem 0.7rem;
+            padding: 0.35rem 0.65rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .tag-name { background: rgba(112, 0, 255, 0.2); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.4); }
         .tag-email { background: rgba(0, 240, 255, 0.2); color: var(--cyan-glow); border: 1px solid rgba(0, 240, 255, 0.4); }
         .tag-company { background: rgba(255, 183, 3, 0.2); color: var(--amber-warn); border: 1px solid rgba(255, 183, 3, 0.4); }
         .tag-dob { background: rgba(0, 255, 157, 0.2); color: var(--emerald-shield); border: 1px solid rgba(0, 255, 157, 0.4); }
+        .tag-address { background: rgba(244, 63, 94, 0.2); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.4); }
+        .tag-phone { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
 
         .code-font {
             font-family: 'JetBrains Mono', monospace;
@@ -721,6 +741,8 @@ HTML_TEMPLATE = """
                         if (s.category.includes('Email')) tagClass = 'tag-email';
                         else if (s.category.includes('Company')) tagClass = 'tag-company';
                         else if (s.category.includes('Birth')) tagClass = 'tag-dob';
+                        else if (s.category.includes('Address')) tagClass = 'tag-address';
+                        else if (s.category.includes('Phone')) tagClass = 'tag-phone';
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -775,12 +797,9 @@ def redact_api():
     total_redacted = sum(stats.values())
 
     samples = []
-    for orig, fake in list(detector.fake_gen.mapping.items())[:25]:
-        cat_name = "Full Name"
-        if '@' in orig: cat_name = "Email Address"
-        elif any(c.isdigit() for c in orig) and len(orig) >= 10: cat_name = "Phone Number"
-        elif any(s in orig for s in ["Ltd", "Inc", "Company", "LLP", "Bank"]): cat_name = "Company Name"
-        elif any(m in orig for m in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]): cat_name = "Date of Birth"
+    for orig, fake in list(detector.fake_gen.mapping.items())[:40]:
+        cat_enum = detector.fake_gen.category_map.get(orig)
+        cat_name = cat_enum.value if cat_enum else "Full Name"
         samples.append({
             "category": cat_name,
             "original": orig,

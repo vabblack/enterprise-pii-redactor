@@ -72,6 +72,7 @@ class FakeValueGenerator:
         self.fake = Faker()
         Faker.seed(seed)
         self.mapping: Dict[str, str] = {}
+        self.category_map: Dict[str, PIICategory] = {}
         # Domain name counter for clean email replacements
         self.domain_map: Dict[str, str] = {}
 
@@ -139,6 +140,7 @@ class FakeValueGenerator:
             replacement = f"[REDACTED_{category.name}]"
 
         self.mapping[clean_key] = replacement
+        self.category_map[clean_key] = category
         return replacement
 
 
