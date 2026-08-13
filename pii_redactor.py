@@ -202,17 +202,27 @@ class PIIDetector:
         self.presidio_analyzer = None
         if HAS_PRESIDIO and HAS_SPACY:
             try:
-                models = [{'lang_code': 'en', 'model_name': 'en_core_web_sm'}]
-                nlp_engine = SpacyNlpEngine(models=models)
-                self.presidio_analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
+                import spacy
+                if spacy.util.is_package("en_core_web_sm"):
+                    models = [{'lang_code': 'en', 'model_name': 'en_core_web_sm'}]
+                    nlp_engine = SpacyNlpEngine(models=models)
+                    self.presidio_analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
+                else:
+                    self.presidio_analyzer = AnalyzerEngine()
             except Exception as e:
-                print(f"[Warning] Presidio initialization fallback: {e}")
+                print(f"[Warning] Presidio fallback active: {e}")
+                try:
+                    self.presidio_analyzer = AnalyzerEngine()
+                except Exception:
+                    self.presidio_analyzer = None
 
-        # spaCy fallback
+        # spaCy standalone fallback
         self.nlp = None
         if HAS_SPACY and not self.presidio_analyzer:
             try:
-                self.nlp = spacy.load("en_core_web_sm")
+                import spacy
+                if spacy.util.is_package("en_core_web_sm"):
+                    self.nlp = spacy.load("en_core_web_sm")
             except Exception:
                 pass
 
