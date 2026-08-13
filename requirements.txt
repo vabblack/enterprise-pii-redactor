@@ -3,4 +3,4 @@ faker>=40.0.0
 spacy>=3.8.0
 presidio-analyzer>=2.2.0
 flask>=3.0.0
-chart.js
+gunicorn>=21.0.0
