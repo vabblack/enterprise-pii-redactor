@@ -13,8 +13,12 @@ from flask import Flask, render_template_string, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from pii_redactor import PIIDetector, DocxPIIRedactor, PIICategory
 
+import tempfile
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
+# Use /tmp directory for Vercel/serverless read-only filesystems
+upload_base = tempfile.gettempdir() if os.environ.get('VERCEL') else os.path.dirname(__file__)
+app.config['UPLOAD_FOLDER'] = os.path.join(upload_base, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max limit
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
