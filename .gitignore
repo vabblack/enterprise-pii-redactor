@@ -4,8 +4,10 @@ venv/
 ENV/
 env/
 
-# Customizations & Agents
+# Customization & Local Docs
 .agents/
+evaluation_strategy_and_metrics.md
+EVALUATION_STRATEGY_AND_METRICS.md
 
 # Python Cache & Bytecode
 __pycache__/
